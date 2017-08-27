@@ -1,0 +1,50 @@
+# Stuff to make Cloud OS / Container Linux
+# less type-tastic
+
+d () {
+	docker run \
+		-e TERM \
+		-e HOME \
+		-v $HOME:$HOME \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /etc/passwd:/etc/passwd:ro \
+		-v /etc/group:/etc/group:ro \
+		-u $(id -u):$(id -g) \
+		--log-driver=none \
+		"$@"
+}
+
+irssi () {
+	id=$(docker ps -q -f name=irssi)
+	if [ -z "$id" ]; then
+		d -d -it --name irssi irssi
+	fi
+
+	docker attach irssi
+}
+
+alias dev_appserver.py="_dev_appserver"
+_dev_appserver () {
+	appdir=$1; shift
+	docker run \
+		--rm \
+		-p 8080:8080 \
+		-p 8000:8000 \
+		-v $appdir:/app \
+		google/cloud-sdk \
+		dev_appserver.py --host=0.0.0.0 --admin_host=0.0.0.0 /app "$@"
+}
+
+dbtl () {
+	d --rm -it dbtl "$@"
+}
+
+backup () {
+	d --rm google/cloud-sdk gsutil -m rsync \
+		-r \
+		-d \
+		-x tmp \
+		-x src \
+		$HOME \
+		gs://neale-private/fozzie
+}
