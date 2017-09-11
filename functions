@@ -47,13 +47,10 @@ dbtl () {
 backup () {
 	dh \
 		--rm \
-		google/cloud-sdk gsutil \
-			-m rsync \
+		google/cloud-sdk gsutil rsync \
 			-r \
 			-d \
-			-x tmp \
-			-x src \
-			-x go \
+			-x 'tmp/|src/|go/|.ssh/authorized_keys|.viminfo' \
 			$HOME \
 			gs://neale-private/fozzie
 	echo
