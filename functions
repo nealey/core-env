@@ -1,7 +1,7 @@
 # Stuff to make Cloud OS / Container Linux
 # less type-tastic
 
-d () {
+dh () {
 	docker run \
 		-e TERM \
 		-e HOME \
@@ -21,6 +21,7 @@ irssi () {
 	fi
 
 	docker attach irssi
+	echo
 }
 
 alias dev_appserver.py="_dev_appserver"
@@ -30,21 +31,48 @@ _dev_appserver () {
 		--rm \
 		-p 8080:8080 \
 		-p 8000:8000 \
-		-v $appdir:/app \
+		-v $appdir:/app:ro \
 		google/cloud-sdk \
 		dev_appserver.py --host=0.0.0.0 --admin_host=0.0.0.0 /app "$@"
 }
 
 dbtl () {
-	d --rm -it dbtl "$@"
+	dh \
+		--rm \
+		-it \
+		-w "$(pwd)" \
+		dbtl "$@"
 }
 
 backup () {
-	d --rm google/cloud-sdk gsutil -m rsync \
-		-r \
-		-d \
-		-x tmp \
-		-x src \
-		$HOME \
-		gs://neale-private/fozzie
+	dh \
+		--rm \
+		google/cloud-sdk gsutil \
+			-m rsync \
+			-r \
+			-d \
+			-x tmp \
+			-x src \
+			-x go \
+			$HOME \
+			gs://neale-private/fozzie
+	echo
 }
+
+go () {
+	dh \
+		--rm \
+		-e GOPATH=$HOME/go \
+		-w "$(pwd)" \
+		golang:1.6 go "$@"
+}
+
+docker-compose () {
+	docker run \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v $(pwd):$(pwd) \
+		--rm \
+		--workdir $(pwd) \
+		docker/compose:1.16.1 "$@"
+}
+
