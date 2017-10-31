@@ -17,7 +17,7 @@ dh () {
 irssi () {
 	id=$(docker ps -q -f name=irssi)
 	if [ -z "$id" ]; then
-		d -d -it --name irssi irssi
+		dh -d -it --name irssi irssi
 	fi
 
 	docker attach irssi
@@ -41,7 +41,7 @@ dbtl () {
 		--rm \
 		-it \
 		-w "$(pwd)" \
-		dbtl "$@"
+		dirtbags/dbtl "$@"
 }
 
 backup () {
