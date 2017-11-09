@@ -38,11 +38,11 @@ _dev_appserver () {
 
 unalias gcloud 2>/dev/null
 gcloud () {
-    dh \
+    docker run \
         --rm \
         -it \
-        -w "$(pwd)" \
         --net=host \
+        -v $HOME/.config:/.config \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v /usr/bin/docker:/usr/bin/docker:ro \
         google/cloud-sdk gcloud "$@"
