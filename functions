@@ -42,7 +42,7 @@ gcloud () {
         --rm \
         -it \
         --net=host \
-        -v $HOME/.config:/.config \
+        -v $HOME/.config:/root/.config \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v /usr/bin/docker:/usr/bin/docker:ro \
         google/cloud-sdk gcloud "$@"
