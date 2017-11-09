@@ -36,6 +36,19 @@ _dev_appserver () {
 		dev_appserver.py --host=0.0.0.0 --admin_host=0.0.0.0 /app "$@"
 }
 
+unalias gloud 2>/dev/null
+gcloud () {
+    dh \
+        --rm \
+        -it \
+        -w "$(pwd)" \
+        --net=host \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /usr/bin/docker:/usr/bin/docker:ro \
+        google/cloud-sdk gcloud "$@"
+}
+
+
 dbtl () {
 	dh \
 		--rm \
