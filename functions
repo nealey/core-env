@@ -36,7 +36,7 @@ _dev_appserver () {
 		dev_appserver.py --host=0.0.0.0 --admin_host=0.0.0.0 /app "$@"
 }
 
-unalias gloud 2>/dev/null
+unalias gcloud 2>/dev/null
 gcloud () {
     dh \
         --rm \
